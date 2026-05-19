@@ -1,0 +1,16 @@
+{
+  "name": "node-blog",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Minimal Node.js static site generator for GitHub Pages",
+  "scripts": {
+    "build": "node src/build.js",
+    "dev": "node src/build.js --watch",
+    "preview": "npx serve dist"
+  },
+  "dependencies": {
+    "gray-matter": "^4.0.3",
+    "marked": "^15.0.7"
+  }
+}
