@@ -3,7 +3,8 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import matter from "gray-matter";
 import { marked } from "marked";
-import { renderIndex, renderPost } from "./templates.js";
+import hljs from "highlight.js";
+import { renderIndex, renderPost, renderTag, generateRss, generateSitemap } from "./templates.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const rootDir = path.resolve(__dirname, "..");
@@ -14,6 +15,10 @@ const distDir = path.join(rootDir, "dist");
 marked.setOptions({
   gfm: true,
   breaks: false,
+  highlight: function (code, lang) {
+    const language = hljs.getLanguage(lang) ? lang : 'plaintext';
+    return hljs.highlight(code, { language }).value;
+  }
 });
 
 async function emptyDir(dir) {
@@ -91,12 +96,60 @@ async function build() {
   const posts = await loadPosts();
 
   await emptyDir(distDir);
-  await writeFileEnsuringDir(path.join(distDir, "index.html"), renderIndex(posts));
+  
+  // Generate paginated index pages
+  const POSTS_PER_PAGE = 5;
+  const totalPages = Math.ceil(posts.length / POSTS_PER_PAGE) || 1;
 
-  for (const post of posts) {
-    const postDir = path.join(distDir, "posts", post.slug);
-    await writeFileEnsuringDir(path.join(postDir, "index.html"), renderPost(post));
+  for (let i = 0; i < totalPages; i++) {
+    const pagePosts = posts.slice(i * POSTS_PER_PAGE, (i + 1) * POSTS_PER_PAGE);
+    const currentPage = i + 1;
+    
+    const htmlPath = currentPage === 1 
+      ? path.join(distDir, "index.html")
+      : path.join(distDir, "page", currentPage.toString(), "index.html");
+      
+    const urlPath = currentPage === 1 ? "" : `page/${currentPage}/`;
+    
+    const pagination = {
+      currentPage,
+      totalPages,
+      prevUrl: currentPage > 1 ? (currentPage === 2 ? "" : `page/${currentPage - 1}/`) : null,
+      nextUrl: currentPage < totalPages ? `page/${currentPage + 1}/` : null
+    };
+    
+    await writeFileEnsuringDir(htmlPath, renderIndex(pagePosts, pagination, urlPath));
   }
+
+  // Generate posts
+  for (let i = 0; i < posts.length; i++) {
+    const post = posts[i];
+    // Since posts are sorted descending (newest first):
+    // "prev" means older post (index + 1)
+    // "next" means newer post (index - 1)
+    const prevPost = posts[i + 1] || null; 
+    const nextPost = posts[i - 1] || null;
+    
+    const postDir = path.join(distDir, "posts", post.slug);
+    await writeFileEnsuringDir(path.join(postDir, "index.html"), renderPost(post, prevPost, nextPost));
+  }
+
+  // Generate tag pages
+  const tagsMap = new Map();
+  for (const post of posts) {
+    for (const tag of post.tags) {
+      if (!tagsMap.has(tag)) tagsMap.set(tag, []);
+      tagsMap.get(tag).push(post);
+    }
+  }
+  for (const [tag, tagPosts] of tagsMap) {
+    const tagDir = path.join(distDir, "tags", tag);
+    await writeFileEnsuringDir(path.join(tagDir, "index.html"), renderTag(tag, tagPosts));
+  }
+
+  // Generate RSS and Sitemap
+  await writeFileEnsuringDir(path.join(distDir, "rss.xml"), generateRss(posts));
+  await writeFileEnsuringDir(path.join(distDir, "sitemap.xml"), generateSitemap(posts));
 
   try {
     await copyDir(publicDir, distDir);
