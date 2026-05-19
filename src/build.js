@@ -22,7 +22,14 @@ marked.setOptions({
 });
 
 async function emptyDir(dir) {
-  await fs.rm(dir, { recursive: true, force: true });
+  try {
+    await fs.rm(dir, { recursive: true, force: true, maxRetries: 3, retryDelay: 100 });
+  } catch (error) {
+    if (error.code !== "ENOENT" && error.code !== "EBUSY" && error.code !== "EPERM") {
+      throw error;
+    }
+    console.warn(`\n⚠️ 알림: [${dir}] 폴더가 현재 다른 프로그램(Live Server 등)에 의해 사용 중이라 완전히 비우지 못했습니다. 기존 파일을 덮어쓰며 계속 진행합니다.\n`);
+  }
   await fs.mkdir(dir, { recursive: true });
 }
 

@@ -123,6 +123,16 @@ export function renderPost(post, prevPost, nextPost) {
       <span class="nav-title">${escapeHtml(nextPost.title)}</span>
     </a>` : `<div></div>`}
   </nav>
+
+  <section class="comments" style="margin-top: 4rem;">
+    <script src="https://utteranc.es/client.js"
+            repo="bjk001ai/node-blog"
+            issue-term="pathname"
+            theme="preferred-color-scheme"
+            crossorigin="anonymous"
+            async>
+    </script>
+  </section>
 </article>`;
 
   return layout({

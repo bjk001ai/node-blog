@@ -5,11 +5,14 @@
   "type": "module",
   "description": "Minimal Node.js static site generator for GitHub Pages",
   "scripts": {
+    "new": "node src/new.js",
+    "admin": "node src/admin.js",
     "build": "node src/build.js",
     "dev": "node src/build.js --watch",
     "preview": "npx serve dist"
   },
   "dependencies": {
+    "express": "^5.2.1",
     "gray-matter": "^4.0.3",
     "highlight.js": "^11.9.0",
     "marked": "^15.0.7"
