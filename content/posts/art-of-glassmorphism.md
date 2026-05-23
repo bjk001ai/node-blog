@@ -1,16 +1,17 @@
 ---
-title: "The Art of Glassmorphism and Glowing Glows in Web Design"
+title: "웹 디자인에서의 글래스모피즘과 네온 글로우 미학"
 date: "2026-05-23"
-tags: ["migration"]
-excerpt: "Learn how to apply harmony, gradients, backdrop-filters, and interactive shadows to design state-of-the-art developer portfolios."
+tags: ["css", "design", "ui", "migration"]
+excerpt: "조화로운 다크모드 명도, 그라디언트, CSS backdrop-filter 및 상호작용형 그림자 효과를 조화롭게 구성하여 프리미엄 개발자 포트폴리오를 디자인하는 깊이 있는 CSS 가이드입니다."
 slug: "art-of-glassmorphism"
 ---
 
-## Modern UI Trends: Depth & Luminosity
-Aesthetically pleasing dark modes are defined by how they deal with hierarchy, depth, and illumination. A black background with flat boxes looks boring. 
+## 현대 UI 트렌드: 깊이감과 일루미네이션의 예술
+시선을 사로잡는 세련된 다크 모드 디자인은 대비(Hierarchy), 깊이감(Depth), 그리고 빛의 분산(Illumination)을 어떻게 다루는지에 따라 결정됩니다. 단순히 완전한 검은색 배경에 평평한 박스들을 얹어두는 레이아웃은 사용자의 몰입감을 떨어뜨리고 단조로움을 유발합니다.
 
 ### Glassmorphism (유리 같은 깊이감)
-Glassmorphism uses translucent backdrops to let the background gradient peak through. It builds layers of elements that feel real and touchable.
+글래스모피즘은 투명한 백드롭 레이어를 배치하여 뒷단의 배경 그라디언트 형태가 은은하게 비치도록 연출합니다. 이는 인터페이스 내부에 입체적이고 만질 수 있는 듯한 다차원 레이어 구조를 완성합니다.
+
 ```css
 .glass-panel {
   background: rgba(255, 255, 255, 0.03);
@@ -19,7 +20,7 @@ Glassmorphism uses translucent backdrops to let the background gradient peak thr
 }
 ```
 
-### Neon Glow (네온 글로우 효과)
-Subtle radial glowing elements beneath panels add a sense of luxury. By using Tailwinds v4 gradients combined with CSS custom properties, we can create light-emitting buttons and containers that respond beautifully to hover events.
+### Neon Glow (은은한 발광 효과)
+패널 아래에 미세하고 부드러운 방사형 그라디언트 발광 요소를 레이어링하여 미래지향적인 럭셔리 감성을 표현합니다. CSS 변수 및 Tailwind v4의 향상된 그라디언트 기능을 결합하면 사용자의 마우스 호버 움직임에 반응해 은은하게 불빛을 뿜어내는 스마트 컴포넌트를 설계할 수 있습니다.
 
-Let's look at how we can implement these ideas to completely wow our readers at first glance.
+이러한 혁신적인 디자인 기법들을 통해 첫인상부터 사용자를 완전히 매료시키는 압도적인 첫 스크린 경험을 창조해 보세요.
